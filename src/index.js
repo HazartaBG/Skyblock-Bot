@@ -3,7 +3,7 @@ require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
 const { initClient } = require('./config/client');
-const { initCommands } = require('./config/slashCommands');
+const { initCommands } = require('./config/commands');
 
 const commandPath = path.resolve(__dirname, './commands');
 const commandFiles = fs
