@@ -23,19 +23,19 @@ async function callback({ options, user, member, guild }) {
     const uuid = (await mojangService.getUUID(name)).id;
     if (!uuid) throw new ServerError('Invalid Username.');
 
-    // let discordName;
+    let discordName;
 
-    // try {
-    //   discordName = (await hypixelService.getPlayer(name)).links.DISCORD;
-    // } catch (e) {
-    //   throw new ServerError('Invalid Username.');
-    // }
+    try {
+      discordName = (await hypixelService.getPlayer(name)).links.DISCORD;
+    } catch (e) {
+      throw new ServerError('Invalid Username.');
+    }
 
-    // if (discordName != requesterDiscord) {
-    //   throw new ServerError(
-    //     "Player profile's linked discord doesn't match your current discord."
-    //   );
-    // }
+    if (discordName != requesterDiscord) {
+      throw new ServerError(
+        "Player profile's linked discord doesn't match your current discord."
+      );
+    }
 
     const guildName = (await hypixelService.getGuild(uuid)).guild.name;
 
