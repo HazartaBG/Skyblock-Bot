@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { GUILD_NAME } = require('../constants');
+const { MessageEmbed } = require('discord.js');
+const { GUILD_NAME, GUEST_ROLE_ID, PLAYER_ROLE_ID } = require('../constants');
 const { ServerError } = require('../errors/serverError');
 const { hypixelService } = require('../services/hypixelService');
 const { mojangService } = require('../services/mojangService');
@@ -14,27 +15,27 @@ const data = new SlashCommandBuilder()
       .setRequired(true)
   );
 
-async function callback(interaction) {
-  const name = interaction.options.getString('name');
-  const requesterDiscord = `${interaction.user.username}#${interaction.user.discriminator}`;
+async function callback({ options, user, member, guild }) {
+  const name = options.getString('name');
+  const requesterDiscord = `${user.username}#${user.discriminator}`;
 
   try {
     const uuid = (await mojangService.getUUID(name)).id;
     if (!uuid) throw new ServerError('Invalid Username.');
 
-    let discordName;
+    // let discordName;
 
-    try {
-      discordName = (await hypixelService.getPlayer(name)).links.DISCORD;
-    } catch (e) {
-      throw new ServerError('Invalid Username.');
-    }
+    // try {
+    //   discordName = (await hypixelService.getPlayer(name)).links.DISCORD;
+    // } catch (e) {
+    //   throw new ServerError('Invalid Username.');
+    // }
 
-    if (discordName != requesterDiscord) {
-      throw new ServerError(
-        "Player profile's linked discord doesn't match your current discord."
-      );
-    }
+    // if (discordName != requesterDiscord) {
+    //   throw new ServerError(
+    //     "Player profile's linked discord doesn't match your current discord."
+    //   );
+    // }
 
     const guildName = (await hypixelService.getGuild(uuid)).guild.name;
 
@@ -42,7 +43,38 @@ async function callback(interaction) {
       throw new ServerError("Player isn't in the guild.");
     }
 
-    await interaction.reply(uuid);
+    const foundMember = await guild.members.fetch({
+      user: member.user.id,
+      force: true,
+    });
+
+    const playerRole = guild.roles.cache.get(PLAYER_ROLE_ID);
+    const guestRole = guild.roles.cache.get(GUEST_ROLE_ID);
+
+    await foundMember.roles.add(playerRole);
+    await foundMember.roles.remove(guestRole);
+
+    try {
+      await foundMember.setNickname(name);
+    } catch (e) {
+      throw new ServerError(
+        "Can't change nickname of someone that has more permissions than I do."
+      );
+    }
+
+    return {
+      embeds: [
+        new MessageEmbed()
+          .setColor('#00FF00')
+          .setTitle('Successful Verification!')
+          .setDescription(
+            `Successfully verified ${name} to your discord account!`
+          )
+          .setFooter({
+            text: 'by StefanDP#6411',
+          }),
+      ],
+    };
   } catch (e) {
     if (e instanceof ServerError) {
       throw e;

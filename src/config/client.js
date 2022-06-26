@@ -2,7 +2,9 @@ const { GatewayIntentBits } = require('discord-api-types/v10');
 const { Client } = require('discord.js');
 const { errorEmbed } = require('../embeds/errorEmbed');
 const { TOKEN } = process.env;
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({
+  intents: [GatewayIntentBits.Guilds, 'GUILD_MEMBERS'],
+});
 
 exports.initClient = (commands) => {
   client.on('ready', () => {
@@ -17,7 +19,9 @@ exports.initClient = (commands) => {
     );
 
     try {
-      if (command) await command.callback(interaction);
+      if (command) {
+        await interaction.reply(await command.callback(interaction));
+      }
     } catch (e) {
       const message = e.message || 'Internal Error';
       await interaction.reply({ embeds: [errorEmbed(message)] });
