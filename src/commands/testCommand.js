@@ -1,17 +1,25 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const { mojangService } = require('../services/mojangService');
 
 const data = new SlashCommandBuilder()
-  .setName('echo')
-  .setDescription('Replies with your input!')
+  .setName('get-uuid')
+  .setDescription("Replies with the player's UUID.")
   .addStringOption((option) =>
     option
-      .setName('input')
-      .setDescription('The input to echo back')
+      .setName('name')
+      .setDescription('The player name to get the UUID of.')
       .setRequired(true)
   );
 
 async function callback(interaction) {
-  await interaction.reply(interaction.options.getString('input'));
+  const name = interaction.options.getString('name');
+
+  try {
+    const uuid = (await mojangService.getUUID(name)).id;
+    await interaction.reply(uuid);
+  } catch (e) {
+    throw { message: 'Invalid Username' };
+  }
 }
 
 module.exports = {
