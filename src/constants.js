@@ -1,1 +1,3 @@
 exports.GUILD_NAME = 'Bulgarian';
+exports.GUEST_ROLE_ID = '928795042062143589';
+exports.PLAYER_ROLE_ID = '930142664010117261';
