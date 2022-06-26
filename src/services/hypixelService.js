@@ -5,8 +5,7 @@ const baseEndpoint = 'https://api.hypixel.net';
 const endpoints = {
   getGuild: (uuid) =>
     `${baseEndpoint}/guild?key=${HYPIXEL_API_KEY}&player=${uuid}`,
-  getPlayer: (uuid) => `${baseEndpoint}/player?uuid=${uuid}`,
-  getPlayerTest: (playername) =>
+  getPlayer: (playername) =>
     `https://api.slothpixel.me/api/players/${playername}`,
 };
 
@@ -15,7 +14,7 @@ async function getGuild(uuid) {
 }
 
 async function getPlayer(playername) {
-  return (await axios.get(endpoints.getPlayerTest(playername))).data;
+  return (await axios.get(endpoints.getPlayer(playername))).data;
 }
 
 exports.hypixelService = {
