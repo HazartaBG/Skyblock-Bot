@@ -28,7 +28,7 @@ async function callback({ options, user, member, guild, channelId }) {
   const name = options.getString('name');
   const requesterDiscord = `${user.username}#${user.discriminator}`;
 
-  const { name: mojangName, id: uuid } = (await mojangService.getUUID(name)).id;
+  const { name: mojangName, id: uuid } = await mojangService.getUUID(name);
   if (!uuid) throw new ServerError('Invalid Username.');
 
   let discordName;
