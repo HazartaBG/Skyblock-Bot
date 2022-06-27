@@ -28,7 +28,7 @@ async function callback({ options, user, member, guild, channelId }) {
   const name = options.getString('name');
   const requesterDiscord = `${user.username}#${user.discriminator}`;
 
-  const uuid = (await mojangService.getUUID(name)).id;
+  const { name: mojangName, id: uuid } = (await mojangService.getUUID(name)).id;
   if (!uuid) throw new ServerError('Invalid Username.');
 
   let discordName;
@@ -63,7 +63,7 @@ async function callback({ options, user, member, guild, channelId }) {
   await foundMember.roles.remove(guestRole);
 
   try {
-    await foundMember.setNickname(name);
+    await foundMember.setNickname(mojangName);
   } catch (e) {
     throw new ServerError(
       "Can't change nickname of someone that has more permissions than I do."
