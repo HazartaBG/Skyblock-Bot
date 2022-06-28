@@ -16,7 +16,7 @@ const data = new SlashCommandBuilder()
   .addStringOption((option) =>
     option
       .setName('name')
-      .setDescription('The player name to get the UUID of.')
+      .setDescription('Your Minecraft Username.')
       .setRequired(true)
   );
 
@@ -34,7 +34,7 @@ async function callback({ options, user, member, guild, channelId }) {
   let discordName;
 
   try {
-    discordName = (await hypixelService.getPlayer(name)).links.DISCORD;
+    discordName = (await hypixelService.getPlayer(name)).links?.DISCORD;
   } catch (e) {
     throw new ServerError('Invalid Username.');
   }
@@ -45,7 +45,7 @@ async function callback({ options, user, member, guild, channelId }) {
     );
   }
 
-  const guildName = (await hypixelService.getGuild(uuid)).guild.name;
+  const guildName = (await hypixelService.getGuild(uuid)).guild?.name;
 
   if (guildName != GUILD_NAME) {
     throw new ServerError("Player isn't in the guild.");
