@@ -8,6 +8,8 @@ const client = new Client({
 });
 
 const talkedRecently = new Set();
+
+const deleteAfterInMiliseconds = 10000;
 const cooldownInMiliseconds = 10000;
 
 exports.initClient = (commands) => {
@@ -25,10 +27,7 @@ exports.initClient = (commands) => {
     try {
       if (command) {
         if (talkedRecently.has(interaction.user.id)) {
-          throw new ServerError(
-            'You are on cooldown. Try again in a bit.',
-            'ephemeral'
-          );
+          throw new ServerError('You are on cooldown. Try again in a bit.');
         }
 
         talkedRecently.add(interaction.user.id);
@@ -37,8 +36,10 @@ exports.initClient = (commands) => {
           talkedRecently.delete(interaction.user.id);
         }, cooldownInMiliseconds);
 
-        const result = await command.callback(interaction);
-        await interaction.reply(result);
+        const content = await command.callback(interaction);
+        const result = typeof content == 'string' ? { content } : content;
+
+        await interaction.reply({ ...result });
       }
     } catch (e) {
       let message;
@@ -47,25 +48,13 @@ exports.initClient = (commands) => {
         console.log(e);
         message = 'Internal Error';
       } else {
-        if (e.flag == 'ephemeral') {
-          client.api
-            .interactions(interaction.id, interaction.token)
-            .callback.post({
-              data: {
-                type: 4,
-                data: {
-                  content: e.message,
-                  flags: 64, // make reply ephemeral
-                },
-              },
-            });
-          return;
-        }
-
         message = e.message;
       }
 
-      await interaction.reply({ embeds: [errorEmbed(message)] });
+      await interaction.reply({
+        embeds: [errorEmbed(message)],
+        ephemeral: true,
+      });
     }
   });
 

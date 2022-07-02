@@ -40,7 +40,9 @@ async function callback({ options, user, member, guild, channelId }) {
   }
 
   if (discordName != requesterDiscord) {
-    console.log(`\n\nDiscord From Links: ${discordName}\nRequester Discord: ${requesterDiscord}\n\n`);
+    console.log(
+      `\n\nDiscord From Links: ${discordName}\nRequester Discord: ${requesterDiscord}\n\n`
+    );
     throw new ServerError(
       "Player profile's linked discord doesn't match your current discord."
     );
@@ -49,7 +51,9 @@ async function callback({ options, user, member, guild, channelId }) {
   const guildName = (await hypixelService.getGuild(uuid)).guild?.name;
 
   if (guildName != GUILD_NAME) {
-    console.log(`\n\nGuild From API: ${guildName}\nGuild from constants: ${GUILD_NAME}\n\n`);
+    console.log(
+      `\n\nGuild From API: ${guildName}\nGuild from constants: ${GUILD_NAME}\n\n`
+    );
     throw new ServerError("Player isn't in the guild.");
   }
 
@@ -84,6 +88,7 @@ async function callback({ options, user, member, guild, channelId }) {
           text: 'by StefanDP#6411',
         }),
     ],
+    ephemeral: true,
   };
 }
 

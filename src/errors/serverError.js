@@ -1,14 +1,12 @@
 class ServerError {
-  constructor(message, flag = 'none') {
+  constructor(message) {
     this.message = message;
-    this.flag = flag;
   }
 
   static invalidChannel(guild, channelId) {
     return new ServerError(
-      'Invalid channel. Sent the command in ' +
-        guild.channels.cache.get(channelId).toString(),
-      'ephemeral'
+      'Invalid channel. Please send the command in ' +
+        guild.channels.cache.get(channelId).toString()
     );
   }
 }
