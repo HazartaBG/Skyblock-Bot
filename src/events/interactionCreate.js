@@ -6,6 +6,13 @@ const talkedRecently = new Set();
 const cooldownInMiliseconds = 10000;
 
 module.exports = new Event('interactionCreate', async (interaction) => {
+  if (interaction.isButton()) {
+    const { callback } = interaction.client.buttons.get(interaction.customId);
+    if (!callback) return;
+
+    return callback(interaction);
+  }
+
   if (!interaction.isCommand()) return;
 
   const command = interaction.client.commands.get(interaction.commandName);

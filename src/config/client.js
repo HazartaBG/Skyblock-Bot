@@ -6,9 +6,10 @@ const client = new Client({
   intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages],
 });
 
-exports.initClient = (commands, events) => {
+exports.initClient = (commands, events, buttons) => {
   client.on('ready', async () => {
     client.commands = commands;
+    client.buttons = buttons;
     console.log(`Logged in as ${client.user.tag}!`);
   });
 

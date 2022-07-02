@@ -1,11 +1,20 @@
-exports.createTicketButton = {
-  type: 1,
-  components: [
-    {
-      type: 2,
-      style: 4,
-      label: '📩 Bulgarian Support Ticket',
-      custom_id: 'ticket_create',
-    },
-  ],
+const { MessageActionRow, MessageButton } = require('discord.js');
+
+const customId = 'ticket_create';
+
+const button = new MessageActionRow().addComponents(
+  new MessageButton()
+    .setCustomId(customId)
+    .setLabel('📩 Bulgarian Support Ticket')
+    .setStyle('PRIMARY')
+);
+
+function callback(interaction) {
+  console.log(interaction);
+}
+
+module.exports = {
+  button,
+  callback,
+  customId,
 };

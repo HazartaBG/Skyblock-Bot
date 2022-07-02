@@ -14,6 +14,7 @@ const { initCommands } = require('./config/commands');
 
 const commandPath = path.resolve(__dirname, './commands');
 const eventsPath = path.resolve(__dirname, './events');
+const buttonsPath = path.resolve(__dirname, './buttons');
 
 const commandFiles = fs
   .readdirSync(commandPath)
@@ -33,9 +34,18 @@ const events = fs
   .filter((file) => file.endsWith('.js'))
   .map((file) => require(`${eventsPath}/${file}`));
 
+const buttons = new Collection();
+
+fs.readdirSync(buttonsPath)
+  .filter((file) => file.endsWith('.js'))
+  .forEach((file) => {
+    const { customId, ...remainingData } = require(`${buttonsPath}/${file}`);
+    buttons.set(customId, remainingData);
+  });
+
 async function main() {
   await initCommands(commandsData);
-  initClient(commands, events);
+  initClient(commands, events, buttons);
 }
 
 main();
