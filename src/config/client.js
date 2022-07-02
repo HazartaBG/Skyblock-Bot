@@ -23,8 +23,6 @@ exports.initClient = (commands) => {
     const command = client.commands.get(interaction.commandName);
     if (!command) return;
 
-    await interaction.deferReply();
-
     try {
       if (talkedRecently.has(interaction.user.id)) {
         throw new ServerError('You are on cooldown. Try again in a bit.');
@@ -37,7 +35,7 @@ exports.initClient = (commands) => {
       }, cooldownInMiliseconds);
 
       const content = await command(interaction);
-      await interaction.followUp(content);
+      await interaction.reply(content);
     } catch (e) {
       let message;
 
@@ -48,7 +46,7 @@ exports.initClient = (commands) => {
         message = e.message;
       }
 
-      await interaction.followUp({
+      await interaction.reply({
         embeds: [errorEmbed(message)],
         ephemeral: true,
       });
