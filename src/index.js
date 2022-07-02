@@ -1,4 +1,10 @@
-require('dotenv').config();
+if (process.env.NODE_ENV == 'production') {
+  require('dotenv').config();
+} else {
+  require('dotenv').config({
+    path: `${__dirname}/config/envs/development.env`,
+  });
+}
 
 const fs = require('fs');
 const path = require('path');
