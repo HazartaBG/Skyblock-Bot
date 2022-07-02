@@ -6,6 +6,7 @@ if (process.env.NODE_ENV == 'production') {
   });
 }
 
+const { Collection } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
 const { initClient } = require('./config/client');
@@ -16,8 +17,14 @@ const commandFiles = fs
   .readdirSync(commandPath)
   .filter((file) => file.endsWith('.js'));
 
-const commands = commandFiles.map((file) => require(`${commandPath}/${file}`));
-const commandsData = commands.map((command) => command.data);
+const commands = new Collection();
+const commandsData = [];
+
+commandFiles.forEach((file) => {
+  const { data, callback } = require(`${commandPath}/${file}`);
+  commands.set(data.name, callback);
+  commandsData.push(data);
+});
 
 async function main() {
   await initCommands(commandsData);
