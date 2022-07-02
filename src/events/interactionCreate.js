@@ -6,19 +6,19 @@ const talkedRecently = new Set();
 const cooldownInMiliseconds = 10000;
 
 module.exports = new Event('interactionCreate', async (interaction) => {
-  if (interaction.isButton()) {
-    const { callback } = interaction.client.buttons.get(interaction.customId);
-    if (!callback) return;
-
-    return callback(interaction);
-  }
-
-  if (!interaction.isCommand()) return;
-
-  const command = interaction.client.commands.get(interaction.commandName);
-  if (!command) return;
-
   try {
+    if (interaction.isButton()) {
+      const { callback } = interaction.client.buttons.get(interaction.customId);
+      if (!callback) return;
+
+      return interaction.reply(await callback(interaction));
+    }
+
+    if (!interaction.isCommand()) return;
+
+    const command = interaction.client.commands.get(interaction.commandName);
+    if (!command) return;
+
     if (talkedRecently.has(interaction.user.id)) {
       throw new ServerError('You are on cooldown. Try again in a bit.');
     }

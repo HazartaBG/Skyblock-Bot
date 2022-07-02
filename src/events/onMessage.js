@@ -1,6 +1,7 @@
-const { createTicket } = require('../buttons/createTicketButton');
+const createTicketButton = require('../buttons/tickets/createTicketButton');
+
 const { DEVELOPER_ID } = require('../constants');
-const { createTicketEmbed } = require('../embeds/createTicketEmbed');
+const { createTicketEmbed } = require('../embeds/tickets/createTicketEmbed');
 const { Event } = require('../structures/Event');
 
 module.exports = new Event('messageCreate', (message) => {
@@ -13,7 +14,7 @@ module.exports = new Event('messageCreate', (message) => {
 
     return message.channel.send({
       embeds: [createTicketEmbed],
-      components: [createTicket.button],
+      components: [createTicketButton.button],
     });
   }
 });

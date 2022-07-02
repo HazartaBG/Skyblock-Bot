@@ -11,6 +11,7 @@ const fs = require('fs');
 const path = require('path');
 const { initClient } = require('./config/client');
 const { initCommands } = require('./config/commands');
+const { getFiles } = require('./utils/getFiles');
 
 const commandPath = path.resolve(__dirname, './commands');
 const eventsPath = path.resolve(__dirname, './events');
@@ -29,6 +30,8 @@ commandFiles.forEach((file) => {
   commandsData.push(data);
 });
 
+console.log(getFiles(buttonsPath));
+
 const events = fs
   .readdirSync(eventsPath)
   .filter((file) => file.endsWith('.js'))
@@ -36,7 +39,7 @@ const events = fs
 
 const buttons = new Collection();
 
-fs.readdirSync(buttonsPath)
+getFiles(buttonsPath)
   .filter((file) => file.endsWith('.js'))
   .forEach((file) => {
     const { customId, ...remainingData } = require(`${buttonsPath}/${file}`);
