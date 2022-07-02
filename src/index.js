@@ -1,5 +1,4 @@
-const { setupConfig } = require('./config/envConfig');
-setupConfig(`${__dirname}/config/envs`);
+require('dotenv').config();
 
 const fs = require('fs');
 const path = require('path');

@@ -3,7 +3,6 @@ const { Client } = require('discord.js');
 const { errorEmbed } = require('../embeds/errorEmbed');
 const { ServerError } = require('../errors/serverError');
 const { TOKEN } = process.env;
-
 const client = new Client({
   intents: [GatewayIntentBits.Guilds, 'GUILD_MEMBERS'],
 });
