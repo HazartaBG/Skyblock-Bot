@@ -30,8 +30,6 @@ commandFiles.forEach((file) => {
   commandsData.push(data);
 });
 
-console.log(getFiles(buttonsPath));
-
 const events = fs
   .readdirSync(eventsPath)
   .filter((file) => file.endsWith('.js'))
